@@ -1,0 +1,33 @@
+name: CI
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - 'feature/**'
+      - 'hotfix/**'
+      - 'fix/**'
+      - 'refactor/**'
+      - 'chore/**'
+      - 'docs/**'
+      - 'test/**'
+
+jobs:
+  ci:
+    name: CI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "lts/*"
+      - name: Install dependencies
+        run: npm clean-install
+      - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
+        run: npm audit signatures
+      - name: Linting
+        run: npm run lint
